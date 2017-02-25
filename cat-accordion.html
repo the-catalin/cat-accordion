@@ -1,0 +1,419 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../cat-decorators/cat-decorator-runner-behavior.html">
+<link rel="import" href="../cat-decorators/decorators/cat-border.html">
+<link rel="import" href="../cat-decorators/decorators/cat-shadow.html">
+
+<dom-module id="cat-accordion">
+<style>
+    
+    :host {
+        display: block;
+        width: 700px;
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+    }
+    ul {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Accordion slice */
+    li {
+        display: table-cell;
+        position: relative;
+        overflow: hidden;
+        width: var(--cat-accordion-slice-width); /* calculated */
+        transition-property: width;
+        transition-duration: var(--cat-accordion-transition-duration); /* user */
+        transition-timing-function: var(--cat-accordion-transition-function); /* user */
+        transition-delay: 0s;
+    }
+    
+    /* Accordion narrowed slice */
+    ul:hover li {
+        width: var(--cat-accordion-narrowed); /* user */
+    }
+    
+    /* Accordion selected image */
+    ul:hover li:hover {
+        width: var(--cat-accordion-selected-width); /* calculated */
+    }
+
+    cat-image {
+        width: var(--cat-accordion-selected-width); /* calculated */
+    }
+
+    #brdr {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        pointer-events: none;
+    }
+
+</style>
+<template>
+    <ul id="acc"></ul>
+    <div id="brdr"></div>
+</template>
+
+<script>
+
+;(function(){
+    
+'use strict';
+
+function dashedLowercase(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+Polymer({
+    is: 'cat-accordion',
+
+    behaviors: [
+        CatBehaviors.CatDecoratorRunnerBehavior
+    ],
+
+    properties: {
+        /**
+         * Disable the centered images effect
+         */
+        disableCenteredImages:          { type: Boolean, value: false},
+        /**
+         * The width of the adjacent images when mouse is over the accordion
+         */
+        narrowedImagesWidth:            { type: Number, value: 50},
+        /**
+         * Transition duration for accordion's slide effect
+         */
+        accordionTransitionDuration:    { type: Number, value: 0.7},
+        /**
+         * Transition timing function for accordion's slide effect.
+         * Available options: ease, linear, ease-in, ease-out, ease-in-out
+         */
+        accordionTransitionFunction:    { type: String, value: 'ease'},
+
+        /**
+         * Disable the photo effect that makes the image to slowly zoom
+         */
+        disableKenBurns:        { type: Boolean, value: false },
+        /**
+         * Ken Burns transition duration in seconds
+         */
+        transitionDuration:     { type: Number, value: 6 },
+        /**
+         * Ken Burns transition delay in seconds
+         */
+        transitionDelay:        { type: Number, value: 0 },
+        /**
+         * Zoom direction. Available options: in, out
+         */
+        kenBurnsZoomDirection:  { type: String, value: 'out' },
+        /**
+         * Point of origin for Ken Burns Effect. Available options:
+         * random, center, top-left, top-right, bottom-left, bottom-right
+         */
+        zoomOrigin:             { type: String, value: 'random' },
+        /**
+         * Zoom percentage for Ken Burns
+         */
+        zoomScale:              { type: Number, value: 10 },
+
+
+        /**
+         * Available options: fade, slide, scale (or combined, space delimited), none
+         */
+        textTransitionType:     { type: String, value: 'scale' },
+        /**
+         * Available options: center, left, right, top, bottom. 'center' is unavailable for textTransitionType: slide
+         */
+        textTransitionDirection: { type: String, value: 'center' },
+        /**
+         * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
+         */
+        textTransitionFunction: { type: String, value: 'ease' },
+        /**
+         * Easing duration, in seconds
+         */
+        textTransitionDuration: { type: Number, value: 1 },        
+        /**
+         * Delay (in seconds) between multiple text appearances
+         */
+        textTransitionDelay:    { type: Number, value: 0.3 },
+        /**
+         * The horizontal position of the text.
+         * Available options: random, center, left, right
+         */
+        horizontalTextPosition: { type: String, value: 'random' },
+        /**
+         * The vertical position of the text.
+         * Available options: random, center, top, bottom
+         */
+        verticalTextPosition:   { type: String, value: 'random' },
+        /**
+         * Text padding in pixels
+         */
+        textPadding:            { type: Number, value: 20 },
+        /**
+         * Space between cat-text elements
+         */
+        textSpacing:            { type: Number, value: 10},
+        /**
+         * Distance in percentage for slide effect.
+         * Available only for Transition type: slide
+         */
+        slideOffset:            { type: Number, value: 100 },
+
+
+        /**
+         * Show image border
+         */
+        disableSliceBorder:     { type: Boolean, value: false},
+        /**
+         * Width of the border in pixels
+         */
+        sliceBorderWidth:       { type: Number, value: 2},        
+        /**
+         * Color of the border. RGB(A) or HEX
+         */
+        sliceBorderColor:       { type: String, value: 'rgba(220,255,255,0.3)'},
+
+
+        /**
+         * Show accordion border
+         */
+        useAccordionBorder:     { type: Boolean, value: false},
+        /**
+         * Width of the border in pixels
+         */
+        accordionBorderWidth:       { type: Number, value: 5},
+        /**
+         * Which sides to apply the border to. Available options: all, top, right, bottom, left
+         */
+        accordionBorderSides:       { type: String, value: 'all'},
+        /**
+         * Radius of the border in pixels
+         */
+        accordionBorderRadius:      { type: Number, value: 0},
+        /**
+         * Color of the border. RGB(A) or HEX
+         */
+        accordionBorderColor:       { type: String, value: 'rgba(119, 119, 119, 1)'},
+        /**
+         * Whether the border is outside or inside the accordion
+         */
+        borderOutsideAccordion:     { type: Boolean, value: false},
+        
+
+        /**
+         * Show image shadow
+         */
+        disableSliceShadow:         { type: Boolean, value: false},
+        /**
+        * The width of the horizontal shadow
+        */       
+        sliceShadowWidth:  { type: Number, value: 0},
+        /**
+         * The blur of the shadow
+         */
+        sliceShadowBlur:             { type: Number, value: 20},
+        /**
+         * The color of the shadow
+         */
+        sliceShadowColor:            { type: String, value: 'rgba(0,0,0,1)'},
+
+        /**
+         * Show accordion shadow
+         */
+        disableAccordionShadow:      { type: Boolean, value: false},
+        /**
+         * The width of the shadow
+         */
+        accordionShadowWidth:        { type: Number, value: -50},
+        /**
+        * The offset of the shadow
+        */       
+        accordionShadowOffset:       { type: Number, value: 15},
+        /**
+         * The color of the shadow
+         */
+        accordionShadowColor:        { type: String, value: 'rgba(0,0,0,0.2)'}
+
+    },
+
+    CatTextProperties: [
+        'textTransitionType',
+        'textTransitionDirection',
+        'textTransitionFunction',
+        'textTransitionDuration',
+        'slideOffset'
+    ],
+
+    CatImageProperties: [
+        'disableKenBurns',
+        'kenBurnsZoomDirection',
+        'transitionDuration',
+        'transitionDelay',
+        'zoomOrigin',
+        'zoomScale',
+        'textPadding',
+        'horizontalTextPosition',
+        'verticalTextPosition',
+        'textTransitionDelay',
+        'textSpacing'
+    ],
+
+    _applyBundledProperties: function(el) {
+        var i, len, key, dashedOriginal;
+        for (i = 0, len = this.CatImageProperties.length; i < len; i++) {
+            dashedOriginal = dashedLowercase(this.CatImageProperties[i]);
+            if (! el.hasAttribute(dashedOriginal) && this[this.CatImageProperties[i]] !== false) {
+                el.setAttribute(dashedOriginal, this[this.CatImageProperties[i]]);
+            }
+        }
+        for (i = 0, len = this.CatTextProperties.length; i < len; i++) {
+            dashedOriginal = dashedLowercase(this.CatTextProperties[i]);
+            if (! el.hasAttribute(dashedOriginal) && this[this.CatTextProperties[i]] !== false) {
+                el.setAttribute(dashedOriginal, this[this.CatTextProperties[i]]);
+            }
+        }
+        el.setAttribute('show-effects-on-hover', '');
+    },
+
+    _appendImageChildren: function() {
+        //append cat-image child elements to #acc div
+        this._lightDom = Polymer.dom(this).children;
+
+        for (var i = 0; i < this._lightDom.length; i++) {
+            this._applyBundledProperties(this._lightDom[i]);
+            var li = document.createElement('li');
+            // var div = document.createElement('div');
+            // div.appendChild(this._lightDom[i]);
+            li.appendChild(this._lightDom[i]);
+            // li.appendChild(div);
+            Polymer.dom(this.$.acc).appendChild(li);
+        }
+    },
+
+    // applyCalculatedStyles: function() {
+
+    //     this.customStyle['--cat-accordion-slice-width'] = parseInt(this.computedStyles.width) / this.numberOfSlides + 'px';
+    //     this.customStyle['--cat-accordion-selected-width'] = parseInt(this.computedStyles.width) -
+    //         parseInt(this.computedStyles.narrow) * (this.numberOfSlides - 1) + 'px';
+    //     this.updateStyles();
+    // },
+
+    // saveCustomStyles: function() {
+    //     this.computedStyles = {};
+
+    //     // this.computedStyles.width = this.getComputedStyleValue('--cat-accordion-width');   
+    //     // this.computedStyles.height = this.getComputedStyleValue('--cat-accordion-height');
+    //     this.computedStyles.width = getComputedStyle(this).width;
+    //     this.computedStyles.height = getComputedStyle(this).height;
+    //     this.computedStyles.transitionDur = this.getComputedStyleValue('--cat-accordion-transition-duration');
+    //     this.computedStyles.narrow = this.getComputedStyleValue('--cat-accordion-narrowed');
+       
+        
+    //     this.applyCalculatedStyles();
+    // },
+
+    _initialStyleSetup: function() {
+        this.computedStyles = {};
+
+        this.computedStyles.width = getComputedStyle(this).width;
+        this.computedStyles.height = getComputedStyle(this).height;
+        this.computedStyles.narrow = this.narrowedImagesWidth + 'px';
+        this.customStyle['--cat-accordion-narrowed'] = this.narrowedImagesWidth + 'px';
+        this.customStyle['--cat-accordion-transition-duration'] = this.accordionTransitionDuration + 's';
+        this.customStyle['--cat-accordion-transition-function'] = this.accordionTransitionFunction;
+
+        var sliceWidth = parseInt(this.computedStyles.width) / this.numberOfSlides,
+            selectedWidth = parseInt(this.computedStyles.width) -
+                parseInt(this.computedStyles.narrow) * (this.numberOfSlides - 1);
+        
+        this.customStyle['--cat-accordion-slice-width'] = sliceWidth + 'px';
+        this.customStyle['--cat-accordion-selected-width'] = selectedWidth + 'px';
+
+        var lis, catImages, i, len, border;
+
+        if (!this.disableCenteredImages) {
+            catImages = Polymer.dom(this.root).querySelectorAll('cat-image');
+            for (i = 0, len = catImages.length; i < len; i++) {
+                catImages[i].style.left = '50%';
+                catImages[i].style.transform = 'translateX(-50%)';
+            }
+        }
+
+        if (!this.disableSliceBorder) {
+            lis = Polymer.dom(this.root).querySelectorAll('li');
+            for (i = 0, len = lis.length; i < len; i++){
+                border = document.createElement('div');
+                border.style.height = '100%';
+                border.style.position = 'absolute';
+                border.style.top = '0';
+                this.addDecorator({
+                    name: 'cat-border',
+                    node: border,
+                    color: this.sliceBorderColor,
+                    width: this.sliceBorderWidth
+                });
+                lis[i].appendChild(border);
+            }
+        }
+
+        if (this.useAccordionBorder) {
+            this.addDecorator({
+                name: 'cat-border',
+                node: (this.borderOutsideAccordion ? this : this.$.brdr),
+                color: this.accordionBorderColor,
+                width: this.accordionBorderWidth,
+                side: this.accordionBorderSides,
+                radius: this.accordionBorderRadius
+            });
+        }
+
+        if (!this.disableSliceShadow) {
+            lis = Polymer.dom(this.root).querySelectorAll('li');
+            for (i = 0, len = lis.length; i < len; i++) {
+                this.addDecorator({
+                    name: 'cat-shadow',
+                    node: lis[i],
+                    horizontalWidth: - this.sliceShadowWidth,
+                    blur: this.sliceShadowBlur,
+                    color: this.sliceShadowColor
+                });
+            }
+        }
+
+        if (!this.disableAccordionShadow) {
+            this.addDecorator({
+                name: 'cat-shadow',
+                node: this,
+                blur: 15,
+                spread: this.accordionShadowWidth,
+                horizontalWidth: 0,
+                verticalWidth:  this.accordionShadowOffset - this.accordionShadowWidth,
+                color: this.accordionShadowColor
+            });
+        }
+
+        this.updateStyles();
+    },
+
+    attached: function() {
+        this._appendImageChildren();
+        this.numberOfSlides = this.getElementsByTagName('li').length;
+
+        this._initialStyleSetup();
+    }
+});
+
+})(); //end siaf
+</script>
+
+</dom-module>

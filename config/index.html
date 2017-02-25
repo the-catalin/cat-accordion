@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<title>cat-accordion</title>
+
+	<script src="../../webcomponentsjs/webcomponents.min.js"></script>
+
+	<link rel="import" href="../cat-accordion.html">
+	<link rel="import" href="../../cat-image/cat-image.html">
+	<link rel="import" href="../../cat-text/cat-text.html">
+	<link rel="import" href="../../cat-config-panel/cat-config-panel.html">
+
+	<style is="custom-style">
+		body {
+			padding-top: 20px !important;
+		}
+		cat-accordion {
+			margin-left: 30px;
+			/*--cat-accordion-width: 600px;
+	    	--cat-accordion-height: 200px;*/
+	    	/*--cat-accordion-narrow: 50px;*/
+	    	/*--cat-accordion-transition-dur: 1s;*/
+	    	/*--cat-accordion-transition-func: ease;*/
+	    	/*width: 640px;
+		    height: 300px;*/
+		    /*margin: 0 auto;*/
+		    /*border: 2px solid red;*/
+	    }
+	</style>
+	<style>
+	    cat-image {
+	    	/*width: 640px;*/
+	    	height: 300px;
+	    	/*margin-top: 1000px;*/
+	    }
+	    cat-image cat-text {
+	    	display: none;
+	    	background-color: rgba(255,255,230,0.7);
+	    	border-radius: 4px;
+            padding: 10px;
+            color: blue;
+	    	font-family: 'Open Sans';
+	    	font-size:22px;
+	    }
+		
+	</style>
+
+</head>
+<body>
+	<!-- 
+		http://webcomponents.online/img.jpg
+		http://lorempixel.com/640/340/
+		https://placeimg.com/640/480/any
+		http://placehold.it/1000x700
+		https://unsplash.it/200/300
+	-->	
+	<cat-config-panel source-file="../cat-accordion.json"></cat-config-panel>
+
+	<script src="../../cat-config-panel/connecter.js"></script>
+
+	<script>
+		var componentString = '<cat-accordion>' +
+				'<cat-image src="http://webcomponents.online/images/01.jpg">' +
+					'<cat-text> Sample text </cat-text>' +
+					'<cat-text> Another sample text </cat-text>' +
+				'</cat-image>' +
+				'<cat-image src="http://webcomponents.online/images/02.jpg">' +
+					'<cat-text> Sample text </cat-text>' +
+					'<cat-text> Another sample text </cat-text>' +
+				'</cat-image>' +
+				'<cat-image src="http://webcomponents.online/images/03.jpg">' +
+					'<cat-text> Sample text </cat-text>' +
+					'<cat-text> Another sample text </cat-text>' +
+				'</cat-image>' +
+				'<cat-image src="http://webcomponents.online/images/04.jpg">' +
+					'<cat-text> Sample text </cat-text>' +
+					'<cat-text> Another sample text </cat-text>' +
+				'</cat-image>' +
+				'<cat-image src="http://webcomponents.online/images/05.jpg">' +
+					'<cat-text> Sample text </cat-text>' +
+					'<cat-text> Another sample text </cat-text>' +
+				'</cat-image>' +
+			'</cat-accordion>',
+			componentName = 'cat-accordion';
+
+		connectComponentWithConfigPanel(componentName, componentString);
+	</script>
+	
+</body>
+</html>

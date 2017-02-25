@@ -1,0 +1,281 @@
+[{
+    "tabName": "Settings",
+    "iconClass": "fa fa-gear",
+    "type": "controlsWithSubtabs",
+    "subtabs": [{
+        "subtabName": "Global Properties",
+        "iconClass": "fa-globe",
+        "controls": [{
+            "name": "Disable Centered",
+            "id": "disableCenteredImages",
+            "type": "toggle",
+            "tip": "Disable the centered images effect"
+        }, {
+            "name": "Narrowed Width",
+            "id": "narrowedImagesWidth",
+            "type": "numeric-input",
+            "min": 10,
+            "max": 120,
+            "step": 1,
+            "tip": "The width of the adjacent images when mouse is over the accordion"
+        }, {
+            "name": "Transition Duration",
+            "id": "accordionTransitionDuration",
+            "type": "numeric-input",
+            "min": 0.1,
+            "max": 3,
+            "step": 0.1,
+            "tip": "Transition duration for accordion's slide effect"
+        }, {
+            "name": "Transition Function",
+            "id": "accordionTransitionFunction",
+            "type": "dropdown",
+            "options": ["ease", "linear", "ease-in", "ease-out", "ease-in-out"],
+            "tip": "Transition timing function for accordion's slide effect"
+        }]
+    }, {
+        "subtabName": "Ken Burns Properties",
+        "iconClass": "fa-globe",
+        "controls": [{
+            "name": "Disable Ken Burns",
+            "id": "disableKenBurns",
+            "type": "toggle",
+            "tip": "Disable the photo effect that makes the image to slowly zoom"
+        }, {
+            "name": "Transition Duration",
+            "id": "transitionDuration",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 20,
+            "step": 0.1,
+            "tip": "Ken Bunrs transition duration in seconds"
+        }, {
+            "name": "Transition Delay",
+            "id": "transitionDelay",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 10,
+            "step": 0.1,
+            "tip": "Ken Bunrs transition delay in seconds"
+        }, {
+            "name": "Ken Burns Zoom",
+            "id": "kenBurnsZoomDirection",
+            "type": "dropdown",
+            "options": ["in", "out"],
+            "tip": "Zoom direction"
+        }, {
+            "name": "Zoom Origin",
+            "id": "zoomOrigin",
+            "type": "dropdown",
+            "options": ["random", "center", "top-left", "top-right", "bottom-left", "bottom-right"],
+            "tip": "Point of origin for Ken Burns effect"
+        }, {
+            "name": "Zoom Scale",
+            "id": "zoomScale",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "tip": "Zoom percentage for Ken Burns"
+        }]
+    }, {
+        "subtabName": "Text Properties",
+        "iconClass": "fa-square-o",
+        "controls": [{
+            "name": "Transition Type",
+            "id": "textTransitionType",
+            "type": "dropdown",
+            "options": ["fade", "scale", "slide"]
+        }, {
+            "name": "Transition Direction",
+            "id": "textTransitionDirection",
+            "type": "dropdown",
+            "options": ["center", "left", "right", "top", "bottom"]
+        }, {
+            "name": "Transition Function",
+            "id": "textTransitionFunction",
+            "type": "dropdown",
+            "options": ["ease", "linear", "ease-in", "ease-out", "ease-in-out"]
+        }, {
+            "name": "Transition Duration",
+            "id": "textTransitionDuration",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 5,
+            "step": 0.1
+        }, {
+            "name": "Transition Delay",
+            "id": "textTransitionDelay",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 2,
+            "step": 0.1,
+            "tip": "Delay between multiple text appearances"
+        }, {
+            "name": "Horizontal Text Pos",
+            "id": "horizontalTextPosition",
+            "type": "dropdown",
+            "options": ["random", "center", "left", "right"]
+        }, {
+            "name": "Vertical Text Pos",
+            "id": "verticalTextPosition",
+            "type": "dropdown",
+            "options": ["random", "center", "top", "bottom"]
+        }, {
+            "name": "Text Padding",
+            "id": "textPadding",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 50,
+            "step": 1
+        }, {
+            "name": "Text Spacing",
+            "id": "textSpacing",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "tip": "Space between cat-text elements"
+        }, {
+            "name": "Slide Offset",
+            "id": "slideOffset",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "tip": "Percentage offset. Available only for Transiton Type: slide"
+        }]
+    }, {
+        "subtabName": "Border Properties",
+        "iconClass": "fa-globe",
+        "controls": [{
+            "name": "Disable Slice Border",
+            "id": "disableSliceBorder",
+            "type": "toggle"
+        }, {
+            "name": "Slice Border Width",
+            "id": "sliceBorderWidth",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 20,
+            "step": 1
+        }, {
+            "name": "Slice Border Color",
+            "id": "sliceBorderColor",
+            "type": "color"
+        }, {
+            "name": "Use Accordion Border",
+            "id": "useAccordionBorder",
+            "type": "toggle"
+        }, {
+            "name": "Accordion Border Width",
+            "id": "accordionBorderWidth",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 20,
+            "step": 1
+        }, {
+            "name": "Accordion Border Sides",
+            "id": "accordionBorderSides",
+            "type": "dropdown",
+            "options": ["all", "top", "right", "bottom", "left"],
+            "tip": "Which sides to apply the border to"
+        }, {
+            "name": "Accordion Border Radius",
+            "id": "accordionBorderRadius",
+            "type": "dropdown",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 20,
+            "step": 1
+        }, {
+            "name": "Accordion Border Color",
+            "id": "accordionBorderColor",
+            "type": "color"
+        }, {
+            "name": "Border Outside Accordion",
+            "id": "borderOutsideAccordion",
+            "type": "toggle",
+            "tip": "Check this to have the border outside the image, not inside"
+        }]
+    }, {
+        "subtabName": "Shadow Properties",
+        "iconClass": "fa-globe",
+        "controls": [{
+            "name": "Disable Slice Shadow",
+            "id": "disableSliceShadow",
+            "type": "toggle"
+        }, {
+            "name": "Slice Shadow Width",
+            "id": "sliceShadowWidth",
+            "type": "numeric-input",
+            "min": -10,
+            "max": 20,
+            "step": 1
+        }, {
+            "name": "Slice Shadow Blur",
+            "id": "sliceShadowBlur",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 50,
+            "step": 1
+        }, {
+            "name": "Slice Shadow Color",
+            "id": "sliceShadowColor",
+            "type": "color"
+        }, {
+            "name": "Disable Accordion Shadow",
+            "id": "disableAccordionShadow",
+            "type": "toggle"
+        }, {
+            "name": "Accordion Shadow Width",
+            "id": "accordionShadowWidth",
+            "type": "numeric-input",
+            "min": -200,
+            "max": 50,
+            "step": 1
+        }, {
+            "name": "Accordion Shadow Offset",
+            "id": "accordionShadowOffset",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 50,
+            "step": 1
+        }, {
+            "name": "Accordion Shadow Color",
+            "id": "accordionShadowColor",
+            "type": "color"
+        }]
+    }]
+    
+}, {
+    "tabName": "Publish",
+    "iconClass": "fa fa-paper-plane",
+    "type": "genericContent"
+}, {
+    "limits" : [{
+        "master": "textTransitionType",
+        "slave": ["textTransitionDirection"],
+        "disabled": ["fade"]
+    }, {
+        "master": "textTransitionType",
+        "slave": ["slideOffset"],
+        "disabled": ["fade", "scale"]
+    }, {
+        "master": "disableKenBurns",
+        "slave": ["transitionDuration", "transitionDelay", "kenBurnsZoomDirection", "zoomOrigin", "zoomScale"]
+    }, {
+        "master": "disableSliceBorder",
+        "slave": ["sliceBorderWidth", "sliceBorderColor"]
+    }, {
+        "master": "disableSliceShadow",
+        "slave": ["sliceShadowWidth", "sliceShadowBlur", "sliceShadowColor"]
+    }, {
+        "master": "useAccordionBorder",
+        "slave": ["accordionBorderWidth", "accordionBorderSides", "accordionBorderRadius", "accordionBorderColor", "borderOutsideAccordion"],
+        "reverse": true
+    }, {
+        "master": "disableAccordionShadow",
+        "slave": ["accordionShadowWidth", "accordionShadowOffset", "accordionShadowColor"]
+    }]
+}]
