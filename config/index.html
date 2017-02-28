@@ -16,31 +16,11 @@
 		}
 		cat-accordion {
 			margin-left: 30px;
-			/*--cat-accordion-width: 600px;
-	    	--cat-accordion-height: 200px;*/
-	    	/*--cat-accordion-narrow: 50px;*/
-	    	/*--cat-accordion-transition-dur: 1s;*/
-	    	/*--cat-accordion-transition-func: ease;*/
-	    	/*width: 640px;
-		    height: 300px;*/
-		    /*margin: 0 auto;*/
-		    /*border: 2px solid red;*/
 	    }
 	</style>
 	<style>
-	    cat-image {
-	    	/*width: 640px;*/
-	    	height: 300px;
-	    	/*margin-top: 1000px;*/
-	    }
 	    cat-image cat-text {
 	    	display: none;
-	    	background-color: rgba(255,255,230,0.7);
-	    	border-radius: 4px;
-            padding: 10px;
-            color: blue;
-	    	font-family: 'Open Sans';
-	    	font-size:22px;
 	    }
 		
 	</style>
@@ -59,7 +39,23 @@
 	<script src="../../cat-config-panel/connecter.js"></script>
 
 	<script>
-		var componentString = '<cat-accordion>' +
+		var componentName = 'cat-accordion',
+			styleObj = {
+				'cat-accordion': {
+					width: 700,
+					height: 300
+				},
+				'cat-text': {
+					backgroundColor: 'rgba(255,255,230,0.7)',
+			    	borderRadius: 4,
+		            padding: 10,
+		            color: 'rgba(0,0,255,1)',
+			    	fontFamily: 'Open Sans',
+			    	fontWeight: 300,
+			    	fontSize: 22
+				}				
+			},
+			componentString = '<cat-accordion>' +
 				'<cat-image src="http://webcomponents.online/images/01.jpg">' +
 					'<cat-text> Sample text </cat-text>' +
 					'<cat-text> Another sample text </cat-text>' +
@@ -80,10 +76,9 @@
 					'<cat-text> Sample text </cat-text>' +
 					'<cat-text> Another sample text </cat-text>' +
 				'</cat-image>' +
-			'</cat-accordion>',
-			componentName = 'cat-accordion';
+			'</cat-accordion>';
 
-		connectComponentWithConfigPanel(componentName, componentString);
+		connectComponentWithConfigPanel(componentName, styleObj, componentString);
 	</script>
 	
 </body>
