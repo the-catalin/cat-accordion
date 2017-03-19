@@ -9,8 +9,8 @@
     
     :host {
         display: block;
-        width: 700px;
-        height: 300px;
+        /*width: 700px;
+        height: 300px;*/
         overflow: hidden;
         position: relative;
     }
@@ -144,11 +144,15 @@ Polymer({
         /**
          * Easing duration, in seconds
          */
-        textTransitionDuration: { type: Number, value: 1 },        
+        textTransitionDuration: { type: Number, value: 1 },
+        /**
+         * Transition delay, in seconds
+         */
+        textTransitionDelay:    { type: Number, value: 0 },
         /**
          * Delay (in seconds) between multiple text appearances
          */
-        textTransitionDelay:    { type: Number, value: 0.3 },
+        delayInBetween:    { type: Number, value: 0.3 },
         /**
          * The horizontal position of the text.
          * Available options: random, center, left, right
@@ -250,15 +254,13 @@ Polymer({
 
     },
 
-    CatTextProperties: [
+    CatImageProperties: [
         'textTransitionType',
         'textTransitionDirection',
         'textTransitionFunction',
         'textTransitionDuration',
-        'slideOffset'
-    ],
-
-    CatImageProperties: [
+        'textTransitionDelay',
+        'slideOffset',
         'disableKenBurns',
         'kenBurnsZoomDirection',
         'transitionDuration',
@@ -268,25 +270,36 @@ Polymer({
         'textPadding',
         'horizontalTextPosition',
         'verticalTextPosition',
-        'textTransitionDelay',
+        'delayInBetween',
         'textSpacing'
     ],
 
-    _applyBundledProperties: function(el) {
-        var i, len, key, dashedOriginal;
-        for (i = 0, len = this.CatImageProperties.length; i < len; i++) {
-            dashedOriginal = dashedLowercase(this.CatImageProperties[i]);
-            if (! el.hasAttribute(dashedOriginal) && this[this.CatImageProperties[i]] !== false) {
-                el.setAttribute(dashedOriginal, this[this.CatImageProperties[i]]);
+    // apply the bundled properties
+    // unless there are individual properties defined for a specific element
+    _getOriginal:function(str) {
+        if (str.indexOf(':') !== -1) {
+            return str.slice(0, str.indexOf(':'));
+        } else {
+            return str;
+        }
+    },
+    _getSpecific: function(str) {
+        if (str.indexOf(':') !== -1) {
+            return str.slice(str.indexOf(':') + 1, str.length);
+        } else {
+            return str;
+        }
+    },
+    _applyBundledProperties: function(el, PropertiesArray) {
+        var i, len, original, specific, dashedOriginal;
+        for (i = 0, len = PropertiesArray.length; i < len; i++) {
+            original = this._getOriginal(PropertiesArray[i]);
+            specific = this._getSpecific(PropertiesArray[i]);
+            dashedOriginal = dashedLowercase(original);
+            if (! el.hasAttribute(dashedOriginal) && this[specific] !== false) {
+                el.setAttribute(dashedOriginal, this[specific]);
             }
         }
-        for (i = 0, len = this.CatTextProperties.length; i < len; i++) {
-            dashedOriginal = dashedLowercase(this.CatTextProperties[i]);
-            if (! el.hasAttribute(dashedOriginal) && this[this.CatTextProperties[i]] !== false) {
-                el.setAttribute(dashedOriginal, this[this.CatTextProperties[i]]);
-            }
-        }
-        el.setAttribute('show-effects-on-hover', '');
     },
 
     _appendImageChildren: function() {
@@ -294,7 +307,9 @@ Polymer({
         this._lightDom = Polymer.dom(this).children;
 
         for (var i = 0; i < this._lightDom.length; i++) {
-            this._applyBundledProperties(this._lightDom[i]);
+            this._applyBundledProperties(this._lightDom[i], this.CatImageProperties);
+            this._lightDom[i].setAttribute('show-effects-on-hover', '');
+            
             var li = document.createElement('li');
             // var div = document.createElement('div');
             // div.appendChild(this._lightDom[i]);
@@ -327,18 +342,19 @@ Polymer({
     // },
 
     _initialStyleSetup: function() {
-        this.computedStyles = {};
+        
+        if (parseInt(getComputedStyle(this).height) === 0) {
+            this.style.height = '300px';
+        }
 
-        this.computedStyles.width = getComputedStyle(this).width;
-        this.computedStyles.height = getComputedStyle(this).height;
-        this.computedStyles.narrow = this.narrowedImagesWidth + 'px';
         this.customStyle['--cat-accordion-narrowed'] = this.narrowedImagesWidth + 'px';
         this.customStyle['--cat-accordion-transition-duration'] = this.accordionTransitionDuration + 's';
         this.customStyle['--cat-accordion-transition-function'] = this.accordionTransitionFunction;
 
-        var sliceWidth = parseInt(this.computedStyles.width) / this.numberOfSlides,
-            selectedWidth = parseInt(this.computedStyles.width) -
-                parseInt(this.computedStyles.narrow) * (this.numberOfSlides - 1);
+        var sliceWidth = parseInt(getComputedStyle(this).width) / this.numberOfSlides,
+            selectedWidth = parseInt(getComputedStyle(this).width) -
+                parseInt(this.narrowedImagesWidth) * (this.numberOfSlides - 1);
+
         
         this.customStyle['--cat-accordion-slice-width'] = sliceWidth + 'px';
         this.customStyle['--cat-accordion-selected-width'] = selectedWidth + 'px';
